@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+enum Unit {
+  UNKNOWN_UNIT = 0;
+  MILLILITER = 1;
+  GRAM = 2;
+}
+
+message UnitAmount {
+  Unit unit = 1;
+  uint64 amount = 2;
+}
+
+message InventoryLine {
+  string ingredient_name = 1;
+  UnitAmount amount = 2;
+}
+
+// Current ingredients available in the kitchen.
+message Inventory { repeated InventoryLine lines = 1; }
