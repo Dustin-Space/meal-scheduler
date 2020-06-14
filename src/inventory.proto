@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package meal_scheduler_proto;
+
 enum Unit {
   UNKNOWN_UNIT = 0;
   MILLILITER = 1;
@@ -9,6 +11,24 @@ enum Unit {
 message UnitAmount {
   Unit unit = 1;
   uint64 amount = 2;
+}
+
+// A Product is something you can buy on LeShop in unit amounts.
+// If you buy a Product, it will provide some UnitAmount of an Ingredient.
+// For example:
+//   https://www.leshop.ch/de/supermarket/home(smt:product/4204032)
+// is a product that provides 150 g of Feta cheese whenever you buy it:
+//   url: 'https://www.leshop.ch/de/supermarket/home(smt:product/4204032)'
+//   contents {
+//     ingredient_name: 'Feta cheese'
+//     amount { unit: GRAM amount: 150 }
+//   }
+message Product {
+  string url = 1;
+  // TODO: repeated?
+  InventoryLine contents = 2;
+
+  // TODO: would be nice to know until when will the thing in the product last.
 }
 
 message InventoryLine {

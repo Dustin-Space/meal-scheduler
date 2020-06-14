@@ -4,6 +4,7 @@ workspace(
 
 # These rules are built-into Bazel but we need to load them first to download more rules
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # NOTE: cannot use version 0.0.1 as it doesn't support Python 3 pip packages.
 git_repository(
@@ -28,3 +29,23 @@ pip3_import(
 load("@my_deps//:requirements.bzl", "pip_install")
 
 pip_install()
+
+http_archive(
+    name = "build_stack_rules_proto",
+    urls = ["https://github.com/stackb/rules_proto/archive/b2913e6340bcbffb46793045ecac928dcf1b34a5.tar.gz"],
+    sha256 = "d456a22a6a8d577499440e8408fc64396486291b570963f7b157f775be11823e",
+    strip_prefix = "rules_proto-b2913e6340bcbffb46793045ecac928dcf1b34a5",
+)
+
+load("@build_stack_rules_proto//python:deps.bzl", "python_proto_library")
+
+python_proto_library()
+
+pip3_import(
+    name = "protobuf_py_deps",
+    requirements = "@build_stack_rules_proto//python/requirements:protobuf.txt",
+)
+
+load("@protobuf_py_deps//:requirements.bzl", protobuf_pip_install = "pip_install")
+
+protobuf_pip_install()
